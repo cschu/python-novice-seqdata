@@ -1,104 +1,132 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
   <head>
-    <meta charset="utf-8">
-    <meta name="generator" content="pandoc">
-    <title>Software Carpentry: Programming with Python</title>
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
-    <link rel="stylesheet" type="text/css" href="css/swc.css" />
-    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
-    <meta charset="UTF-8" />
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <meta charset="UTF-8">
+    <title>Python-novice-seqdata by cschu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
-  <body class="lesson">
-    <div class="container card">
-      <div class="banner">
-        <a href="http://software-carpentry.org" title="Software Carpentry">
-          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
-        </a>
-      </div>
-      <article>
-      <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-                    <h1 class="title">Programming with Python</h1>
-          <p>The best way to learn how to program is to do something useful, so this introduction to Python is built around a common scientific task: data analysis.</p>
-<p>Our real goal isn’t to teach you Python, but to teach you the basic concepts that all programming depends on. We use Python in our lessons because:</p>
-<ol style="list-style-type: decimal">
-<li>we have to use <em>something</em> for examples;</li>
-<li>it’s free, well-documented, and runs almost everywhere;</li>
-<li>it has a large (and growing) user base among scientists; and</li>
-<li>experience shows that it’s easier for novices to pick up than most other languages.</li>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Python-novice-seqdata</h1>
+      <h2 class="project-tagline"></h2>
+      <a href="https://github.com/cschu/python-novice-seqdata" class="btn">View on GitHub</a>
+      <a href="https://github.com/cschu/python-novice-seqdata/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/cschu/python-novice-seqdata/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="programming-with-python" class="anchor" href="#programming-with-python" aria-hidden="true"><span class="octicon octicon-link"></span></a>Programming with Python</h1>
+
+<p>The best way to learn how to program is to do something useful,
+so this introduction to Python is built around a common scientific task:
+data analysis.</p>
+
+<p>Our real goal isn't to teach you Python,
+but to teach you the basic concepts that all programming depends on.
+We use Python in our lessons because:</p>
+
+<ol>
+<li> we have to use <em>something</em> for examples;</li>
+<li> it's free, well-documented, and runs almost everywhere;</li>
+<li> it has a large (and growing) user base among scientists; and</li>
+<li> experience shows that it's easier for novices to pick up than most other languages.</li>
 </ol>
-<p>But the two most important things are to use whatever language your colleagues are using, so that you can share your work with them easily, and to use that language <em>well</em>.</p>
-<p>We are performing quality checks of Illumina sequencing data. The data sets are stored in Fastq format. Each read in a Fastq file consists of four rows: the identifier, the sequence, a separator, and the base qualities.</p>
+
+<p>But the two most important things are
+to use whatever language your colleagues are using,
+so that you can share your work with them easily,
+and to use that language <em>well</em>.</p>
+
+<p>We are performing quality checks of Illumina sequencing data.
+The data sets are stored in Fastq format. Each read in a Fastq file consists of four rows: the identifier, the sequence, a separator, and the base qualities.</p>
+
 <pre><code>@HWI-ST863:222:D22L1ACXX:8:1101:1095:55853/1
 ATTGCATGCACACCAAGTGTTNGGCAAAATGTTAGAGTGAGACGACAGTTGGGGAGGTTTGACGATTATCTTTCATTTGTAGAGTAGATGAATCGAAGA
 +
-@@@DDDDDHHHHFD;AG:CBF#3AFGHIEBGEHGG?F1?CBBDHGGFF8BFHID;;B(=?B&gt;CBCC=C@CCCCC@&gt;CDC&gt;@A@:@CCCDCACDCBBC&lt;5</code></pre>
+@@@DDDDDHHHHFD;AG:CBF#3AFGHIEBGEHGG?F1?CBBDHGGFF8BFHID;;B(=?B&gt;CBCC=C@CCCCC@&gt;CDC&gt;@A@:@CCCDCACDCBBC&lt;5
+</code></pre>
+
 <p>We want to:</p>
+
 <ul>
-<li>load that data into memory,</li>
-<li>perform some quality control tests, and</li>
-<li>plot the results.</li>
+<li>  load that data into memory,</li>
+<li>  perform some quality control tests, and</li>
+<li>  plot the results.</li>
 </ul>
-<p>To do all that, we’ll have to learn a little bit about programming.</p>
-<section class="prereq panel panel-warning">
-<div class="panel-heading">
-<h2><span class="glyphicon glyphicon-education"></span>Prerequisites</h2>
-</div>
-<div class="panel-body">
-<p>Learners need to understand the concepts of files and directories (including the working directory) and how to start a Python interpreter before tackling this lesson. This lesson references the Jupyter (IPython) Notebook although it can be taught through any Python interpreter. The commands in this lesson pertain to <strong>Python 2</strong>.</p>
-</div>
-</section>
-<section class="getready panel panel-warning">
-<div class="panel-heading">
-<h2><span class="glyphicon glyphicon-check"></span>Getting ready</h2>
-</div>
-<div class="panel-body">
+
+<p>To do all that, we'll have to learn a little bit about programming.</p>
+
+<blockquote>
+<h2>
+<a id="prerequisites-prereq" class="anchor" href="#prerequisites-prereq" aria-hidden="true"><span class="octicon octicon-link"></span></a>Prerequisites {.prereq}</h2>
+
+<p>Learners need to understand the concepts of files and directories
+(including the working directory) and how to start a Python
+interpreter before tackling this lesson. This lesson references the Jupyter (IPython)
+Notebook although it can be taught through any Python interpreter.
+The commands in this lesson pertain to <strong>Python 2</strong>.</p>
+
+<h2>
+<a id="getting-ready-getready" class="anchor" href="#getting-ready-getready" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting ready {.getready}</h2>
+
 <p>You need to download some files to follow this lesson:</p>
-<ol style="list-style-type: decimal">
+
+<ol>
 <li>Make a new folder in your Desktop called <code>python-novice-fastqc</code>.</li>
 <li>Download <a href="./python-novice-fastqc-data.zip">python-novice-fastqc-data.zip</a> and move the file to this folder.</li>
-<li>If it’s not unzipped yet, double-click on it to unzip it. You should end up with a new folder called <code>data</code>.</li>
+<li>If it's not unzipped yet, double-click on it to unzip it. You should end up with a new folder called <code>data</code>.</li>
 <li>You can access this folder from the Unix shell with:</li>
 </ol>
-<pre class="input"><code>$ cd &amp;&amp; cd Desktop/python-novice-fastqc/data</code></pre>
-</div>
-</section>
-<h2 id="topics">Topics</h2>
-<ol style="list-style-type: decimal">
-<li><a href="01-libraries.html">Introduction and Libraries</a></li>
-<li><a href="02-loop.html">Repeating Actions with Loops</a></li>
-<li><a href="03-lists.html">Storing Multiple Values in Lists</a></li>
-<li><a href="04-cond.html">Making Choices</a></li>
-<li><a href="05-files.html">Analyzing Data from Multiple Files</a></li>
-<li><a href="06-func.html">Creating Functions</a></li>
-<li><a href="07-cmdline.html">Command-Line Programs</a></li>
+
+<pre lang="input"><code>$ cd &amp;&amp; cd Desktop/python-novice-fastqc/data
+</code></pre>
+</blockquote>
+
+<h2>
+<a id="topics" class="anchor" href="#topics" aria-hidden="true"><span class="octicon octicon-link"></span></a>Topics</h2>
+
+<ol>
+<li> <a href="01-libraries.html">Introduction and Libraries</a>
+</li>
+<li> <a href="02-loop.html">Repeating Actions with Loops</a>
+</li>
+<li> <a href="03-lists.html">Storing Multiple Values in Lists</a>
+</li>
+<li> <a href="04-cond.html">Making Choices</a>
+</li>
+<li> <a href="05-files.html">Analyzing Data from Multiple Files</a>
+</li>
+<li> <a href="06-func.html">Creating Functions</a>
+</li>
+<li> <a href="07-cmdline.html">Command-Line Programs</a>
+</li>
 </ol>
-<h2 id="other-resources">Other Resources</h2>
+
+<h2>
+<a id="other-resources" class="anchor" href="#other-resources" aria-hidden="true"><span class="octicon octicon-link"></span></a>Other Resources</h2>
+
 <ul>
-<li><a href="reference.html">Reference</a></li>
-<li><a href="discussion.html">Discussion</a></li>
-<li><a href="instructors.html">Instructor’s Guide</a></li>
+<li>  <a href="reference.html">Reference</a>
+</li>
+<li>  <a href="discussion.html">Discussion</a>
+</li>
+<li>  <a href="instructors.html">Instructor's Guide</a>
+</li>
 </ul>
-        </div>
-      </div>
-      </article>
-      <div class="footer">
-        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
-        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/python-novice-inflammation">Source</a>
-        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
-        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
-      </div>
-    </div>
-    <!-- Javascript placed at the end of the document so the pages load faster -->
-    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
-    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/cschu/python-novice-seqdata">Python-novice-seqdata</a> is maintained by <a href="https://github.com/cschu">cschu</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
   </body>
 </html>
