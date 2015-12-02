@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: Programming with Python</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+                    <a href="index.html"><h1 class="title">Programming with Python</h1></a>
+          <h2 class="subtitle">Creating Functions</h2>
+          <section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>Define a function that takes parameters.</li>
+<li>Return a value from a function.</li>
+<li>Test and debug a function.</li>
+<li>Set default values for function parameters.</li>
+<li>Explain why we should divide programs into small, single-purpose functions.</li>
+</ul>
+</div>
+</section>
+<p>At this point, we’ve written code to calculate and draw some interesting features in our sequencing data and loop over all our data files to quickly draw these plots for each of them. But, our code is getting pretty long and complicated; what if we had thousands of datasets, and didn’t want to generate a figure for every single one? Commenting out the figure-drawing code is a nuisance. Also, what if we want to use that code again, on a different dataset or at a different point in our program? Cutting and pasting it is going to make our code get very long and very repetative, very quickly. We’d like a way to package our code so that it is easier to reuse, and Python provides for this by letting us define things called ‘functions’ - a shorthand way of re-executing longer pieces of code.</p>
+<p>Let’s start by defining a function <code>fahr_to_kelvin</code> that converts temperatures from Fahrenheit to Kelvin:</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> fahr_to_kelvin(temp):
+    <span class="kw">return</span> ((temp - <span class="dv">32</span>) * (<span class="dv">5</span>/<span class="dv">9</span>)) + <span class="fl">273.15</span></code></pre>
+<p>The function definition opens with the word <code>def</code>, which is followed by the name of the function and a parenthesized list of parameter names. The <a href="reference.html#function-body">body</a> of the function — the statements that are executed when it runs — is indented below the definition line, typically by four spaces.</p>
+<p>When we call the function, the values we pass to it are assigned to those variables so that we can use them inside the function. Inside the function, we use a <a href="reference.html#return-statement">return statement</a> to send a result back to whoever asked for it.</p>
+<p>Let’s try running our function. Calling our own function is no different from calling any other function:</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="dt">print</span> <span class="st">&#39;freezing point of water:&#39;</span>, fahr_to_kelvin(<span class="dv">32</span>)
+<span class="dt">print</span> <span class="st">&#39;boiling point of water:&#39;</span>, fahr_to_kelvin(<span class="dv">212</span>)</code></pre>
+<pre class="output"><code>freezing point of water: 273.15
+boiling point of water: 373.15</code></pre>
+<p>We’ve successfully called the function that we defined, and we have access to the value that we returned.</p>
+<h2 id="composing-functions">Composing Functions</h2>
+<p>Now that we’ve seen how to turn Fahrenheit into Kelvin, it’s easy to turn Kelvin into Celsius:</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> kelvin_to_celsius(temp):
+    <span class="kw">return</span> temp - <span class="fl">273.15</span>
+
+<span class="dt">print</span> <span class="st">&#39;absolute zero in Celsius:&#39;</span>, kelvin_to_celsius(<span class="fl">0.0</span>)</code></pre>
+<pre class="output"><code>absolute zero in Celsius: -273.15</code></pre>
+<p>What about converting Fahrenheit to Celsius? We could write out the formula, but we don’t need to. Instead, we can <a href="reference.html#function-composition">compose</a> the two functions we have already created:</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> fahr_to_celsius(temp):
+    temp_k = fahr_to_kelvin(temp)
+    result = kelvin_to_celsius(temp_k)
+    <span class="kw">return</span> result
+
+<span class="dt">print</span> <span class="st">&#39;freezing point of water in Celsius:&#39;</span>, fahr_to_celsius(<span class="fl">32.0</span>)</code></pre>
+<pre class="output"><code>freezing point of water in Celsius: 0.0</code></pre>
+<p>Let’s put the quality decoding into a function.</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> decodeQuality(char):
+    <span class="kw">return</span> <span class="dt">ord</span>(char) - <span class="dv">33</span>
+
+qual = <span class="st">&#39;@@@IIIII&#39;</span>
+<span class="kw">for</span> c in qual[:<span class="dv">10</span>]:
+    <span class="dt">print</span> c, decodeQuality(c)</code></pre>
+<pre class="output"><code>@ 31
+@ 31
+@ 31
+I 40
+I 40
+I 40
+I 40
+I 40</code></pre>
+<p>This is our first taste of how larger programs are built: we define basic operations, then combine them in ever-large chunks to get the effect we want. Real-life functions will usually be larger than the ones shown here — typically half a dozen to a few dozen lines — but they shouldn’t ever be much longer than that, or the next person who reads it won’t be able to understand what’s going on.</p>
+<h2 id="tidying-up">Tidying up</h2>
+<p>Now that we know how to wrap bits of code up in functions, we can make our analysis easier to read and easier to reuse.</p>
+<p>For each of the 3 tests, we will build functions for calculating and plotting. We start with the GC content analysis.</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> computeGCContentPerRead(filename):
+    gc_content = []
+    <span class="kw">for</span> read in fq.read_fq(filename):
+        nGC = read[<span class="dv">1</span>].count(<span class="st">&#39;G&#39;</span>) + read[<span class="dv">1</span>].count(<span class="st">&#39;C&#39;</span>)
+        gc_content.append(<span class="dt">float</span>(nGC) / <span class="dt">len</span>(read[<span class="dv">1</span>]))
+    <span class="kw">return</span> gc_content
+
+<span class="kw">def</span> plotGCContentPerRead(subplot, gc_content):
+    n, bins, patches = subplot.hist(gc_per_read, <span class="dv">20</span>, normed=<span class="dv">1</span>, facecolor=<span class="st">&#39;green&#39;</span>, alpha=<span class="fl">0.2</span>)
+    y = mlab.normpdf(bins, np.mean(gc_per_read), np.std(gc_per_read))
+    l = subplot.plot(bins, y, <span class="st">&#39;r--&#39;</span>, linewidth=<span class="dv">2</span>)
+
+gc_per_read = computeGCContentPerRead(<span class="st">&#39;large.fq&#39;</span>)
+<span class="kw">for</span> i, gc in <span class="dt">enumerate</span>(gc_per_read[:<span class="dv">10</span>]):
+    <span class="dt">print</span> i, gc
+
+
+fig = plt.figure(figsize=(<span class="fl">30.0</span>, <span class="fl">6.0</span>))
+sp1 = fig.add_subplot(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">1</span>)
+plotGCContentPerRead(sp1, gc_per_read)</code></pre>
+<p>We do the same with the base content per position:</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> computeBaseComposition(filename):
+    base_composition = []
+    n_sequences = <span class="dv">0</span>
+    <span class="kw">for</span> read in fq.read_fq(filename):
+        n_sequences += <span class="dv">1</span>
+        seq = read[<span class="dv">1</span>]
+        <span class="kw">if</span> not base_composition:
+            <span class="kw">for</span> base in seq:
+                base_composition.append([<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>])
+        <span class="kw">for</span> i, base in <span class="dt">enumerate</span>(seq):
+            <span class="kw">if</span> base == <span class="st">&#39;A&#39;</span>:
+                base_composition[i][<span class="dv">0</span>] += <span class="dv">1</span>
+            <span class="kw">elif</span> base == <span class="st">&#39;C&#39;</span>:
+                base_composition[i][<span class="dv">1</span>] += <span class="dv">1</span>
+            <span class="kw">elif</span> base == <span class="st">&#39;G&#39;</span>:
+                base_composition[i][<span class="dv">2</span>] += <span class="dv">1</span>
+            <span class="kw">elif</span> base == <span class="st">&#39;U&#39;</span> or base == <span class="st">&#39;T&#39;</span>:
+                base_composition[i][<span class="dv">3</span>] += <span class="dv">1</span>
+            <span class="kw">else</span>:
+                base_composition[i][<span class="dv">4</span>] += <span class="dv">1</span>
+
+    <span class="kw">for</span> i, pos in <span class="dt">enumerate</span>(base_composition):
+        <span class="kw">for</span> j, base in <span class="dt">enumerate</span>(<span class="st">&#39;ACGTN&#39;</span>):
+            base_composition[i][j] = base_composition[i][j] / <span class="dt">float</span>(n_sequences)
+
+    <span class="kw">return</span> base_composition
+
+
+<span class="kw">def</span> plotBaseComposition(subplot, base_composition):
+    y = []
+    x = <span class="dt">range</span>(<span class="dt">len</span>(base_composition))
+    <span class="kw">for</span> base in <span class="st">&#39;ACGTN&#39;</span>:
+        y.append([])
+    <span class="kw">for</span> i, base in <span class="dt">enumerate</span>(<span class="st">&#39;ACGTN&#39;</span>):
+        <span class="kw">for</span> j, pos in <span class="dt">enumerate</span>(base_composition):
+            y[i].append(pos[i])
+        subplot.plot(x, y[i], linewidth=<span class="fl">0.5</span>)
+
+base_composition = computeBaseComposition(<span class="st">&#39;large.fq&#39;</span>)
+<span class="kw">for</span> i, base in <span class="dt">enumerate</span>(<span class="st">&#39;ACGTN&#39;</span>):
+    <span class="dt">print</span> base,
+    <span class="kw">for</span> j, pos in <span class="dt">enumerate</span>(base_composition):
+        <span class="kw">if</span> j &lt; <span class="dv">10</span>:
+            <span class="kw">pass</span>
+            <span class="co">#print pos[i] / float(n_sequences),</span>
+    <span class="dt">print</span>
+
+
+
+fig = plt.figure(figsize=(<span class="fl">30.0</span>, <span class="fl">6.0</span>))
+sp2 = fig.add_subplot(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>)
+plotBaseComposition(sp2,base_composition)</code></pre>
+<p>And finally with the quality plots.</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> checkQualityPerBase(filename):
+    qualities = []
+    <span class="kw">for</span> read in fq.read_fq(filename):
+        qual = read[<span class="dv">3</span>]
+        <span class="kw">if</span> not qualities:
+            <span class="kw">for</span> q in qual:
+                qualities.append([])
+        <span class="kw">for</span> i, q in <span class="dt">enumerate</span>(qual):
+            qualities[i].append(decodeQuality(q))
+    <span class="kw">return</span> qualities
+
+<span class="kw">def</span> plotQualityPerBase(subplot, qualities):
+    x = []
+    y = []
+    avg_qualities = []
+    <span class="kw">for</span> i, col in <span class="dt">enumerate</span>(qualities):
+        avg_qualities.append(<span class="dv">0</span>)
+        <span class="kw">for</span> q in col:
+            x.append(i)
+            y.append(q)
+            avg_qualities[i] = avg_qualities[i] + q
+        avg_qualities[i] = avg_qualities[i] / <span class="dt">len</span>(col)
+
+    <span class="co">#subplot.plot(x, y, &#39;k.&#39;, linewidth=0.5)</span>
+    bp = subplot.boxplot(qualities, <span class="dv">0</span>, <span class="st">&#39;&#39;</span>)
+    avg_pl = subplot.plot(<span class="dt">range</span>(<span class="dt">len</span>(avg_qualities)), avg_qualities, <span class="st">&#39;y&#39;</span>, linewidth=<span class="dv">3</span>)
+
+
+qualities = checkQualityPerBase(<span class="st">&#39;large.fq&#39;</span>)
+
+<span class="kw">for</span> i, col in <span class="dt">enumerate</span>(qualities[:<span class="dv">10</span>]):
+    <span class="kw">for</span> j, q in <span class="dt">enumerate</span>(qualities[i][:<span class="dv">10</span>]):
+        <span class="dt">print</span> qualities[j][i],
+    <span class="dt">print</span>
+
+fig = plt.figure(figsize=(<span class="fl">30.0</span>, <span class="fl">6.0</span>))
+sp3 = fig.add_subplot(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">3</span>)
+plotQualityPerBase(sp3,qualities)</code></pre>
+<p>Notice that rather than jumbling this code together in one giant <code>for</code> loop, we can now read and reuse both ideas separately. We can reproduce the previous analysis with a much simpler <code>for</code> loop:</p>
+<pre class="sourceCode python"><code class="sourceCode python">fig = plt.figure(figsize=(<span class="fl">30.0</span>, <span class="fl">24.0</span>))
+
+
+subplots = <span class="dv">0</span>
+<span class="kw">for</span> filename in <span class="dt">sorted</span>(glob.glob(<span class="st">&#39;*genomic*.100k.fq&#39;</span>)):
+
+    qualities = checkQualityPerBase(filename)
+    base_composition = computeBaseComposition(filename)
+    gc_per_read = computeGCContentPerRead(filename)
+
+    subplot = fig.add_subplot(<span class="dv">4</span>, <span class="dv">3</span>, subplots<span class="dv">+1</span>)
+    plotQualityPerBase(subplot, qualities)
+    subplot = fig.add_subplot(<span class="dv">4</span>, <span class="dv">3</span>, subplots<span class="dv">+2</span>)
+    plotBaseComposition(subplot,base_composition)
+    subplot = fig.add_subplot(<span class="dv">4</span>, <span class="dv">3</span>, subplots<span class="dv">+3</span>)
+    plotGCContentPerRead(subplot, gc_per_read)
+    subplots += <span class="dv">3</span></code></pre>
+<p>By giving our functions human-readable names, we can more easily read and understand what is happening in the <code>for</code> loop. Even better, if at some later date we want to use either of those pieces of code again, we can do so in a single line.</p>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2><span class="glyphicon glyphicon-pencil"></span>Combining strings</h2>
+</div>
+<div class="panel-body">
+<p>“Adding” two strings produces their concatenation: <code>'a' + 'b'</code> is <code>'ab'</code>. Write a function called <code>fence</code> that takes two parameters called <code>original</code> and <code>wrapper</code> and returns a new string that has the wrapper character at the beginning and end of the original. A call to your function should look like this:</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="dt">print</span>(fence(<span class="st">&#39;name&#39;</span>, <span class="st">&#39;*&#39;</span>))</code></pre>
+<pre class="output"><code>*name*</code></pre>
+</div>
+</section>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2><span class="glyphicon glyphicon-pencil"></span>Selecting characters from strings</h2>
+</div>
+<div class="panel-body">
+<p>If the variable <code>s</code> refers to a string, then <code>s[0]</code> is the string’s first character and <code>s[-1]</code> is its last. Write a function called <code>outer</code> that returns a string made up of just the first and last characters of its input. A call to your function should look like this:</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="dt">print</span>(outer(<span class="st">&#39;helium&#39;</span>))</code></pre>
+<pre class="output"><code>hm</code></pre>
+</div>
+</section>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2><span class="glyphicon glyphicon-pencil"></span>Rescaling an array</h2>
+</div>
+<div class="panel-body">
+<p>Write a function <code>rescale</code> that takes an array as input and returns a corresponding array of values scaled to lie in the range 0.0 to 1.0. (Hint: If <span class="math"><em>L</em></span> and <span class="math"><em>H</em></span> are the lowest and highest values in the original array, then the replacement for a value <span class="math"><em>v</em></span> should be <span class="math">(<em>v</em> − <em>L</em>) / (<em>H</em> − <em>L</em>)</span>.)</p>
+</div>
+</section>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2><span class="glyphicon glyphicon-pencil"></span>Testing and documenting your function</h2>
+</div>
+<div class="panel-body">
+<p>Run the commands <code>help(numpy.arange)</code> and <code>help(numpy.linspace)</code> to see how to use these functions to generate regularly-spaced values, then use those values to test your <code>rescale</code> function. Once you’ve successfully tested your function, add a docstring that explains what it does.</p>
+</div>
+</section>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2><span class="glyphicon glyphicon-pencil"></span>Defining defaults</h2>
+</div>
+<div class="panel-body">
+<p>Rewrite the <code>rescale</code> function so that it scales data to lie between 0.0 and 1.0 by default, but will allow the caller to specify lower and upper bounds if they want. Compare your implementation to your neighbor’s: do the two functions always behave the same way?</p>
+</div>
+</section>
+<section class="challenge panel panel-success">
+<div class="panel-heading">
+<h2><span class="glyphicon glyphicon-pencil"></span>Variables inside and outside functions</h2>
+</div>
+<div class="panel-body">
+<p>What does the following piece of code display when run - and why?</p>
+<pre class="sourceCode python"><code class="sourceCode python">f = <span class="dv">0</span>
+k = <span class="dv">0</span>
+
+<span class="kw">def</span> f2k(f):
+  k = ((f<span class="dv">-32</span>)*(<span class="fl">5.0</span>/<span class="fl">9.0</span>)) + <span class="fl">273.15</span>
+  <span class="kw">return</span> k
+
+f2k(<span class="dv">8</span>)
+f2k(<span class="dv">41</span>)
+f2k(<span class="dv">32</span>)
+
+<span class="dt">print</span>(k)</code></pre>
+</div>
+</section>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/python-novice-inflammation">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>

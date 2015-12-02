@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: Programming with Python</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+                    <a href="index.html"><h1 class="title">Programming with Python</h1></a>
+          <h2 class="subtitle">Analyzing Data from Multiple Files</h2>
+          <section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>Use a library function to get a list of filenames that match a simple wildcard pattern.</li>
+<li>Use a for loop to process multiple files.</li>
+</ul>
+</div>
+</section>
+<p>We now have almost everything we need to process all our data files. The only thing that’s missing is a library with a rather unpleasant name:</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="ch">import</span> glob</code></pre>
+<p>The <code>glob</code> library contains a single function, also called <code>glob</code>, that finds files whose names match a pattern. We provide those patterns as strings: the character <code>*</code> matches zero or more characters, while <code>?</code> matches any one character. We can use this to get the names of all the HTML files in the current directory:</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="dt">print</span>(glob.glob(<span class="st">&#39;*.html&#39;</span>))</code></pre>
+<pre class="output"><code>[&#39;01-numpy.html&#39;, &#39;02-loop.html&#39;, &#39;03-lists.html&#39;, &#39;04-files.html&#39;, &#39;05-cond.html&#39;, &#39;06-func.html&#39;, &#39;07-errors.html&#39;, &#39;08-defensive.html&#39;, &#39;09-debugging.html&#39;, &#39;10-cmdline.html&#39;, &#39;index.html&#39;, &#39;LICENSE.html&#39;, &#39;instructors.html&#39;, &#39;README.html&#39;, &#39;discussion.html&#39;, &#39;reference.html&#39;]</code></pre>
+<p>As these examples show, <code>glob.glob</code>’s result is a list of strings, which means we can loop over it to do something with each filename in turn. In our case, the “something” we want to do is generate a set of plots for each file in our sequencing dataset. Let’s test it by calculating and plotting the GC content per read for some larger input files.</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="ch">import</span> glob
+<span class="ch">import</span> numpy <span class="ch">as</span> np
+<span class="ch">import</span> matplotlib.pyplot <span class="ch">as</span> plt
+<span class="ch">import</span> matplotlib.mlab <span class="ch">as</span> mlab
+
+filenames = glob.glob(<span class="st">&#39;*.100k.fq&#39;</span>)
+
+<span class="kw">for</span> fn in filenames:
+    <span class="dt">print</span> fn
+    gc_per_read = []
+
+    <span class="kw">for</span> read in fq.read_fq(fn):
+        nGC = read[<span class="dv">1</span>].count(<span class="st">&#39;G&#39;</span>) + read[<span class="dv">1</span>].count(<span class="st">&#39;C&#39;</span>)
+        gc_per_read.append(<span class="dt">float</span>(nGC) / <span class="dt">len</span>(read[<span class="dv">1</span>]))
+
+    n, bins, patches = plt.hist(gc_per_read, <span class="dv">20</span>, normed=<span class="dv">1</span>, facecolor=<span class="st">&#39;green&#39;</span>, alpha=<span class="fl">0.2</span>)
+    y = mlab.normpdf(bins, np.mean(gc_per_read), np.std(gc_per_read))
+    l = plt.plot(bins, y, <span class="st">&#39;r--&#39;</span>, linewidth=<span class="dv">2</span>)
+    plt.show()</code></pre>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/python-novice-inflammation">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>

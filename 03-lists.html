@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: Programming with Python</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+                    <a href="index.html"><h1 class="title">Programming with Python</h1></a>
+          <h2 class="subtitle">Storing Multiple Values in Lists</h2>
+          <section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2><span class="glyphicon glyphicon-certificate"></span>Learning Objectives</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>Explain what a list is.</li>
+<li>Create and index lists of simple values.</li>
+</ul>
+</div>
+</section>
+<p>Just as a <code>for</code> loop is a way to do operations many times, a list is a way to store many values. We create a list by putting values inside square brackets:</p>
+<pre class="sourceCode python"><code class="sourceCode python">bases = [<span class="st">&#39;A&#39;</span>, <span class="st">&#39;C&#39;</span>, <span class="st">&#39;G&#39;</span>, <span class="st">&#39;T&#39;</span>]
+<span class="dt">print</span> <span class="st">&#39;DNA contains&#39;</span>, bases</code></pre>
+<pre class="output"><code>DNA contains [&#39;A&#39;, &#39;C&#39;, &#39;G&#39;, &#39;T&#39;]</code></pre>
+<p>We select individual elements from lists by indexing them:</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="dt">print</span> <span class="st">&#39;first and last:&#39;</span>, bases[<span class="dv">0</span>], bases[-<span class="dv">1</span>]</code></pre>
+<pre class="output"><code>first and last: A T</code></pre>
+<p>and if we loop over a list, the loop variable is assigned elements one at a time:</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="kw">for</span> base in bases:
+    <span class="dt">print</span> base</code></pre>
+<pre class="output"><code>A
+C
+G
+T</code></pre>
+<p>There is one important difference between lists and strings: we can change the values in a list, but we cannot change the characters in a string. For example:</p>
+<pre class="sourceCode python"><code class="sourceCode python">names = [<span class="st">&#39;Newton&#39;</span>, <span class="st">&#39;Darwing&#39;</span>, <span class="st">&#39;Turing&#39;</span>] <span class="co"># typo in Darwin&#39;s name</span>
+<span class="dt">print</span>(<span class="st">&#39;names is originally:&#39;</span>, names)
+names[<span class="dv">1</span>] = <span class="st">&#39;Darwin&#39;</span> <span class="co"># correct the name</span>
+<span class="dt">print</span>(<span class="st">&#39;final value of names:&#39;</span>, names)
+
+dna_rna = [<span class="st">&#39;ACGT&#39;</span>, <span class="st">&#39;ACGT&#39;</span>] <span class="co"># uracil in RNA!</span>
+<span class="dt">print</span> <span class="st">&#39;DNA contains&#39;</span>, dna_rna[<span class="dv">0</span>]
+<span class="dt">print</span> <span class="st">&#39;RNA contains&#39;</span>, dna_rna[<span class="dv">1</span>]
+dna_rna[<span class="dv">1</span>] = <span class="st">&#39;ACGU&#39;</span>
+<span class="dt">print</span> <span class="st">&#39;RNA contains&#39;</span>, dna_rna[<span class="dv">1</span>]</code></pre>
+<pre class="output"><code>DNA contains ACGT
+RNA contains ACGT
+RNA contains ACGU</code></pre>
+<p>works, but:</p>
+<pre class="sourceCode python"><code class="sourceCode python">dna_rna[<span class="dv">1</span>][<span class="dv">3</span>] = <span class="st">&#39;U&#39;</span></code></pre>
+<pre class="error"><code>---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+&lt;ipython-input-73-ef3c4f1d5d8e&gt; in &lt;module&gt;()
+----&gt; 1 dna_rna[1][3] = &#39;U&#39;
+
+TypeError: &#39;str&#39; object does not support item assignment</code></pre>
+<p>does not.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h2><span class="glyphicon glyphicon-pushpin"></span>Ch-Ch-Ch-Changes</h2>
+</div>
+<div class="panel-body">
+<p>Data which can be modified in place is called <a href="reference.html#mutable">mutable</a>, while data which cannot be modified is called <a href="reference.html#immutable">immutable</a>. Strings and numbers are immutable. This does not mean that variables with string or number values are constants, but when we want to change the value of a string or number variable, we can only replace the old value with a completely new value.</p>
+<p>Lists and arrays, on the other hand, are mutable: we can modify them after they have been created. We can change individual elements, append new elements, or reorder the whole list. For some operations, like sorting, we can choose whether to use a function that modifies the data in place or a function that returns a modified copy and leaves the original unchanged.</p>
+<p>Be careful when modifying data in place. If two variables refer to the same list, and you modify the list value, it will change for both variables! If you want variables with mutable values to be independent, you must make a copy of the value when you assign it.</p>
+<p>Because of pitfalls like this, code which modifies data in place can be more difficult to understand. However, it is often far more efficient to modify a large data structure in place than to create a modified copy for every small change. You should consider both of these aspects when writing your code.</p>
+</div>
+</aside>
+<p>There are many ways to change the contents of lists besides assigning new values to individual elements:</p>
+<pre class="sourceCode python"><code class="sourceCode python">bases.append(<span class="st">&#39;U&#39;</span>)
+<span class="dt">print</span> <span class="st">&#39;DNA/RNA alphabet:&#39;</span>, bases</code></pre>
+<pre class="output"><code>DNA/RNA alphabet: [&#39;A&#39;, &#39;C&#39;, &#39;G&#39;, &#39;T&#39;, &#39;U&#39;]</code></pre>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="kw">del</span> bases[<span class="dv">4</span>]
+<span class="dt">print</span> <span class="st">&#39;DNA alphabet:&#39;</span>, bases</code></pre>
+<pre class="output"><code>DNA alphabet: [&#39;A&#39;, &#39;C&#39;, &#39;G&#39;, &#39;T&#39;]</code></pre>
+<pre class="sourceCode python"><code class="sourceCode python">bases.reverse()
+<span class="dt">print</span> <span class="st">&#39;Complementary strand&#39;</span>, bases</code></pre>
+<pre class="output"><code>Complementary strand [&#39;T&#39;, &#39;G&#39;, &#39;C&#39;, &#39;A&#39;]</code></pre>
+<p>While modifying in place, it is useful to remember that python treats lists in a slightly counterintuitive way.</p>
+<p>If we make a list and (attempt to) copy it then modify in place, we can cause all sorts of trouble:</p>
+<pre class="sourceCode python"><code class="sourceCode python">dna = [<span class="st">&#39;A&#39;</span>, <span class="st">&#39;C&#39;</span>, <span class="st">&#39;G&#39;</span>, <span class="st">&#39;T&#39;</span>]
+rna = dna
+rna[<span class="dv">3</span>] = <span class="st">&#39;U&#39;</span>
+<span class="dt">print</span> <span class="st">&#39;RNA&#39;</span>, rna
+<span class="dt">print</span> <span class="st">&#39;DNA&#39;</span>, dna</code></pre>
+<pre class="output"><code>RNA [&#39;A&#39;, &#39;C&#39;, &#39;G&#39;, &#39;U&#39;]
+DNA [&#39;A&#39;, &#39;C&#39;, &#39;G&#39;, &#39;U&#39;]</code></pre>
+<p>This is because python stores a list in memory, and then can use multiple names to refer to the same list. If all we want to do is copy a (simple) list, we can use the list() command, so we do not modify a list we did not mean to:</p>
+<pre class="sourceCode python"><code class="sourceCode python">dna = [<span class="st">&#39;A&#39;</span>, <span class="st">&#39;C&#39;</span>, <span class="st">&#39;G&#39;</span>, <span class="st">&#39;T&#39;</span>]
+rna = <span class="dt">list</span>(dna)
+rna[<span class="dv">3</span>] = <span class="st">&#39;U&#39;</span>
+<span class="dt">print</span> <span class="st">&#39;RNA&#39;</span>, rna
+<span class="dt">print</span> <span class="st">&#39;DNA&#39;</span>, dna</code></pre>
+<pre class="output"><code>RNA [&#39;A&#39;, &#39;C&#39;, &#39;G&#39;, &#39;U&#39;]
+DNA [&#39;A&#39;, &#39;C&#39;, &#39;G&#39;, &#39;T&#39;]</code></pre>
+<p>We can use the <code>enumerate</code> function to get the position (or index) of the elements in a list.</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="kw">for</span> i, base in <span class="dt">enumerate</span>(dna):
+    <span class="dt">print</span> i, base</code></pre>
+<pre class="output"><code>0 A
+1 C
+2 G
+3 T</code></pre>
+<p>Knowing lists allows us to have a closer look at the base qualities at each position. If we have M N-bp reads, it means we have N lists of M quality values:</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="kw">for</span> read in fq.read_fq(<span class="st">&#39;small.fq&#39;</span>):
+    qual = read[<span class="dv">3</span>]
+    <span class="kw">for</span> q in qual[:<span class="dv">10</span>]:
+        <span class="dt">print</span> <span class="dt">ord</span>(q) - <span class="dv">33</span>,
+    <span class="dt">print</span></code></pre>
+<pre class="output"><code>31 31 31 35 35 35 35 35 39 39
+31 34 34 37 37 37 37 37 39 39
+34 34 34 37 37 37 37 37 39 39
+34 34 34 37 37 37 37 37 39 39
+33 33 34 33 35 37 37 37 39 39
+34 34 34 37 37 37 37 37 39 39
+34 34 34 37 37 37 37 37 39 39
+30 30 30 33 35 26 33 30 28 25
+34 34 34 37 37 37 37 37 39 39
+33 31 33 37 37 37 37 37 39 39</code></pre>
+<p>To store these values, we have to build a list of lists.</p>
+<pre class="sourceCode python"><code class="sourceCode python">qualities = []
+<span class="kw">for</span> q in qual:
+    qualities.append([])
+<span class="dt">print</span> <span class="st">&#39;empty qualities per position:&#39;</span> qualities[:<span class="dv">10</span>]</code></pre>
+<pre class="output"><code>empty qualities per position: [[], [], [], [], [], [], [], [], [], []]</code></pre>
+<pre class="sourceCode python"><code class="sourceCode python">qualities = []
+<span class="kw">for</span> q in qual:
+    qualities.append([])
+<span class="kw">for</span> read in fq.read_fq(<span class="st">&#39;small.fq&#39;</span>):
+    qual = read[<span class="dv">3</span>]
+    <span class="kw">for</span> i, q in <span class="dt">enumerate</span>(qual):
+        qualities[i].append(<span class="dt">ord</span>(q) - <span class="dv">33</span>)
+
+<span class="dt">print</span> qualities[:<span class="dv">10</span>]</code></pre>
+<pre class="output"><code>[[31, 31, 34, 34, 33, 34, 34, 30, 34, 33], [31, 34, 34, 34, 33, 34, 34, 30, 34, 31], [31, 34, 34, 34, 34, 34, 34, 30, 34, 33], [35, 37, 37, 37, 33, 37, 37, 33, 37, 37], [35, 37, 37, 37, 35, 37, 37, 35, 37, 37], [35, 37, 37, 37, 37, 37, 37, 26, 37, 37], [35, 37, 37, 37, 37, 37, 37, 33, 37, 37], [35, 37, 37, 37, 37, 37, 37, 30, 37, 37], [39, 39, 39, 39, 39, 39, 39, 28, 39, 39], [39, 39, 39, 39, 39, 39, 39, 25, 39, 39]]</code></pre>
+<p>We can make this look nicer:</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="kw">for</span> i, col in <span class="dt">enumerate</span>(qualities[:<span class="dv">10</span>]):
+    <span class="kw">for</span> j, q in <span class="dt">enumerate</span>(qualities[i][:<span class="dv">10</span>]):
+        <span class="dt">print</span> qualities[j][i],
+    <span class="dt">print</span></code></pre>
+<pre class="output"><code>31 31 31 35 35 35 35 35 39 39
+31 34 34 37 37 37 37 37 39 39
+34 34 34 37 37 37 37 37 39 39
+34 34 34 37 37 37 37 37 39 39
+33 33 34 33 35 37 37 37 39 39
+34 34 34 37 37 37 37 37 39 39
+34 34 34 37 37 37 37 37 39 39
+30 30 30 33 35 26 33 30 28 25
+34 34 34 37 37 37 37 37 39 39
+33 31 33 37 37 37 37 37 39 39</code></pre>
+<p>And to calculate the average qualities for each position:</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="kw">for</span> col in qualities:
+    avg_q = <span class="dv">0</span>
+    <span class="kw">for</span> q in col:
+        avg_q = avg_q + q
+    avg_qualities.append(avg_q / <span class="dt">float</span>(n_sequences))
+
+<span class="dt">print</span> <span class="st">&#39;Average qualities per position:&#39;</span>
+<span class="kw">for</span> q in avg_qualities[:<span class="dv">10</span>]:
+    <span class="dt">print</span> q,
+<span class="dt">print</span></code></pre>
+<pre class="output"><code>Average qualities per position:
+32.8 32.9 33.2 36.0 36.4 35.7 36.4 36.1 37.9 37.6</code></pre>
+<p>We can now visualise this:</p>
+<pre class="sourceCode python"><code class="sourceCode python">%matplotlib inline
+<span class="ch">import</span> numpy <span class="ch">as</span> np
+<span class="ch">import</span> matplotlib.pyplot <span class="ch">as</span> plt
+
+x = []
+y = []
+<span class="kw">for</span> i, pos_quals in <span class="dt">enumerate</span>(qualities):
+    <span class="kw">for</span> q in pos_quals:
+        x.append(i)
+        y.append(q)
+
+pl = plt.plot(x, y, <span class="st">&#39;k.&#39;</span>, linewidth=<span class="fl">0.5</span>)
+bp = plt.boxplot(qualities, <span class="dv">0</span>, <span class="st">&#39;&#39;</span>)
+avg_pl = plt.plot(<span class="dt">range</span>(<span class="dt">len</span>(avg_qualities)), avg_qualities, <span class="st">&#39;y&#39;</span>, linewidth=<span class="dv">3</span>)</code></pre>
+<h2 id="turn-a-string-into-a-list" class="challenge">Turn a string into a list</h2>
+<p>Use a for-loop to convert the string “hello” into a list of letters:</p>
+<pre class="sourceCode python"><code class="sourceCode python">[<span class="st">&quot;h&quot;</span>, <span class="st">&quot;e&quot;</span>, <span class="st">&quot;l&quot;</span>, <span class="st">&quot;l&quot;</span>, <span class="st">&quot;o&quot;</span>]</code></pre>
+<p>Hint: You can create an empty list like this:</p>
+<pre class="sourceCode python"><code class="sourceCode python">my_list = []</code></pre>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/python-novice-inflammation">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="http://software-carpentry.org/v5/js/jquery-1.9.1.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+  </body>
+</html>
